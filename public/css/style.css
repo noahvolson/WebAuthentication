@@ -2,3 +2,8 @@ body {
     background-color: #000000;
     color: white;
 }
+
+label {
+    display: block;
+    font: .9rem 'Fira Sans', sans-serif;
+}
