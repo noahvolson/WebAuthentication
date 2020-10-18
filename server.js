@@ -50,14 +50,21 @@ app.get('/create.html', (req, res) => {
 })
 
 app.post('/userexists', [limiter, bodyParser.json()], (req, res) => {
-    console.log(req.body)
+
     getUser(req.body.username).then(result => {
-        res.json(Boolean(result))
+        res.json({userexists: Boolean(result)})
+    })
+})
+
+app.post('/adduser', bodyParser.json(), (req, res) => {
+
+    console.log(req.body)
+    upsertUser(req.body).then(() => {
+        res.sendFile(__dirname + "/views/login.html");
     })
 })
 
 app.post('/login', bodyParser.json(), (req, res) => {
-    console.log(req.body)
 
     getUser(req.body.username).then(result => {
         res.json({authenticated: result.password === req.body.password})
