@@ -29,6 +29,9 @@ async function createUser() {
     else if (password.length < 8) {
         error.innerText = "Password must eight characters or longer.";
     }
+    else if (password.length > 24) {
+        error.innerText = "Password must be less than 24 characters.";
+    }
     else if (!lowerAlphabetical.test(password)) {
         error.innerText = "Password must contain at least one lowercase letter.";
     }
@@ -50,7 +53,9 @@ async function createUser() {
     }
 
     console.log("Adding user...")
-    await addUser({username: username, password: password})
+    addUser({username: username, password: password}).then((result) => {
+        window.location.href = "index.html";
+    })
 }
 
 function userExists(username) {
@@ -73,4 +78,8 @@ function addUser(user) {
         body:JSON.stringify(user),
         headers: { "Content-Type": "application/json"}
     })
+        .then(response => response.json())
+        .then(json => {
+            return json
+        })
 }
