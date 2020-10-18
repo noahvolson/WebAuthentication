@@ -2,10 +2,17 @@ const express = require("express");
 const app = express();
 const favicon = require("serve-favicon");
 const {MongoClient} = require('mongodb');
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt')
+const rateLimit = require("express-rate-limit");
 
+const SALTROUNDS = 10;
+const limiter = rateLimit({
+    windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    max: 20,                       // 20 attempts per day
+});
 
-/////////////////////////////////// Middleware ///////////////////////////////////
+///////////////////////////////// General Middleware /////////////////////////////////
 
 // serve favicon
 app.use(favicon(__dirname + "/public/images/favicon.ico"));
@@ -38,12 +45,26 @@ app.get('/index.html', bodyParser.json(), (req, res) => {
     }
 })
 
-app.post('/login', bodyParser.json(), (req, res) => {
-    console.log(req.body)
-    //req["user"] = 5
+app.get('/create.html', (req, res) => {
+    res.sendFile(__dirname + "/views/create.html")
 })
 
-/////////////////////////////////// Listener  ///////////////////////////////////
+app.post('/userexists', [limiter, bodyParser.json()], (req, res) => {
+    console.log(req.body)
+    getUser(req.body.username).then(result => {
+        res.json(Boolean(result))
+    })
+})
+
+app.post('/login', bodyParser.json(), (req, res) => {
+    console.log(req.body)
+
+    getUser(req.body.username).then(result => {
+        res.json({authenticated: result.password === req.body.password})
+    })
+})
+
+/////////////////////////////////// Listener ///////////////////////////////////
 
 // listen for requests
 const listener = app.listen(3000, () => {

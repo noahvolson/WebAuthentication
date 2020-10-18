@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/create.js"></script>
+</head>
+
+<body onload="main()">
+
+<header>
+    <h1>Create an account</h1>
+</header>
+
+<main>
+
+    <div>
+        <label for="usernameInput">Username:</label>
+        <input type="text" id="usernameInput">
+
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput">
+    </div>
+
+    <div>
+        <button id="submitBtn">Create</button>
+        <label id="createError" class="error"></label>
+    </div>
+
+    <div>
+        <label>All passwords must have:</label>
+        <ul>
+            <li>A minimum of eight characters</li>
+            <li>At least one lowercase letter</li>
+            <li>At least one uppercase letter</li>
+            <li>At least one number</li>
+            <li>At least one special character</li>
+        </ul>
+
+    </div>
+</main>
+
+</body>
+</html>

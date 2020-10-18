@@ -18,11 +18,15 @@
         <label for="usernameInput">Username:</label>
         <input type="text" id="usernameInput">
 
-        <label for="passwordInput">Password (8 characters minimum):</label>
-        <input type="password" id="passwordInput" minlength="8" required>
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput">
     </div>
 
-    <button id="loginBtn">Click to Login</button>
+    <div>
+        <button id="loginBtn">Login</button>
+        <a href="/create.html"><button>Create an account</button></a>
+        <label id="loginError" class="error"></label>
+    </div>
 </main>
 
 </body>
