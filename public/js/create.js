@@ -6,55 +6,17 @@ async function createUser() {
 
     let username = document.getElementById("usernameInput").value;
     let password = document.getElementById("passwordInput").value;
-    let error = document.getElementById("createError");
-
-    let lowerAlphabetical = new RegExp("^(?=.*[a-z])");
-    let upperAlphabetical = new RegExp("^(?=.*[A-Z])");
-    let numericCharacter = new RegExp("^(?=.*[0-9])");
-    let specialCharacter = new RegExp("^(?=.*[!@#\$%\^&\*])");
-
-    let taken = false;
-    await userExists(username).then(result => {
-        if (result.userexists) {
-            taken = true;
-        }
-    })
-
-    if (taken) {
-        error.innerText = "Username taken.";
-    }
-    else if (username.length === 0) {
-        error.innerText = "Invalid username.";
-    }
-    else if (password.length < 8) {
-        error.innerText = "Password must eight characters or longer.";
-    }
-    else if (password.length > 24) {
-        error.innerText = "Password must be less than 24 characters.";
-    }
-    else if (!lowerAlphabetical.test(password)) {
-        error.innerText = "Password must contain at least one lowercase letter.";
-    }
-    else if (!upperAlphabetical.test(password)) {
-        error.innerText = "Password must contain at least one uppercase letter.";
-    }
-    else if (!numericCharacter.test(password)) {
-        error.innerText = "Password must contain at least one number.";
-    }
-    else if (!specialCharacter.test(password)) {
-        error.innerText = "Password must contain at least one special character (!@#$%^&*).";
-    }
-    else {
-        error.innerText = "";
-    }
-
-    if (error.innerText !== "") { //Error has been set by something else
-        return;
-    }
+    let message = document.getElementById("messageInput").value;
 
     console.log("Adding user...")
-    addUser({username: username, password: password}).then((result) => {
-        window.location.href = "index.html";
+    addUser({username: username, password: password, message: message}).then((result) => {
+        if (result.error) {
+            document.getElementById("createError").innerText = result.error;
+        }
+        else {
+            window.location.href = "index.html";
+            sessionStorage.setItem("newlyCreated", "true")
+        }
     })
 }
 

@@ -80,20 +80,61 @@ app.post('/userexists', [limiter, bodyParser.json()], (req, res) => {
 
 app.post('/adduser', bodyParser.json(), (req, res) => {
 
-    bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
-        bcrypt.hash(req.body.password, salt, function(err, hash) {
+    let username = req.body.username;
+    let password = req.body.password;
+    let message = req.body.message;
 
-            let newUser = {
-                username: req.body.username,
-                password: hash
-            }
-            upsertUser(newUser).then(() => {
-                console.log(`Added ${newUser.username}`)
-            })
-        });
-    });
+    let lowerAlphabetical = new RegExp("^(?=.*[a-z])");
+    let upperAlphabetical = new RegExp("^(?=.*[A-Z])");
+    let numericCharacter = new RegExp("^(?=.*[0-9])");
+    let specialCharacter = new RegExp("^(?=.*[!@#\$%\^&\*])");
 
-    res.json({})
+    getUser(req.body.username).then(user => {
+        if (user) { // user already exists
+            res.json({error: "Username taken."});
+        }
+        else if (username.length === 0) {
+            res.json({error: "Invalid username."});
+        }
+        else if (password.length < 8) {
+            res.json({error: "Password must eight characters or longer."});
+        }
+        else if (password.length > 24) {
+            res.json({error: "Password must be less than 24 characters."});
+        }
+        else if (!lowerAlphabetical.test(password)) {
+            res.json({error: "Password must contain at least one lowercase letter."});
+        }
+        else if (!upperAlphabetical.test(password)) {
+            res.json({error: "Password must contain at least one uppercase letter."});
+        }
+        else if (!numericCharacter.test(password)) {
+            res.json({error: "Password must contain at least one number."});
+        }
+        else if (!specialCharacter.test(password)) {
+            res.json({error:  "Password must contain at least one special character (!@#$%^&*)."});
+        }
+        else if (message.length === 0) {
+            res.json({error: "Please add a secret message."});
+        }
+        else {
+            bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
+                bcrypt.hash(req.body.password, salt, function(err, hash) {
+
+                    let newUser = {
+                        username: username,
+                        password: hash,
+                        message: message
+                    }
+                    upsertUser(newUser).then(() => {
+                        console.log(`Added ${newUser.username}`)
+                    })
+                });
+            });
+
+            res.json({})
+        }
+    })
 })
 
 app.post('/login', [limiter, bodyParser.json()], (req, res) => {

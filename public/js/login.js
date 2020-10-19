@@ -1,4 +1,10 @@
 function main() {
+
+    if (sessionStorage.getItem("newlyCreated")) {
+        document.getElementById("newlyCreated").innerText = "Account created. Login here!"
+        sessionStorage.clear();
+    }
+
     document.getElementById("loginBtn").onclick = login;
 }
 
