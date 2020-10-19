@@ -3,8 +3,9 @@ const app = express();
 const favicon = require("serve-favicon");
 const {MongoClient} = require('mongodb');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const rateLimit = require("express-rate-limit");
+const session = require('express-session')
 
 const SALT_ROUNDS = 10;
 const limiter = rateLimit({
@@ -14,18 +15,39 @@ const limiter = rateLimit({
 
 ///////////////////////////////// General Middleware /////////////////////////////////
 
+/* ENFORCE HTTPS
+app.use (function (req, res, next) {
+    if (req.secure) {
+        // https active, continue
+        next();
+    } else {
+        // http request, redirect to https
+        res.redirect('https://' + req.headers.host + req.url);
+    }
+});
+*/
+
 // serve favicon
 app.use(favicon(__dirname + "/public/images/favicon.ico"));
 
 // make all the files in 'public' available
 app.use(express.static("public"));
 
+// add sessions to track logged in users
+app.use(session({
+    cookie: {
+        sameSite: true,
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 
 /////////////////////////////////// Routes ///////////////////////////////////
 
 app.get('/', bodyParser.json(), (req, res) => {
 
-    if (req.user !== undefined && req.user !== null) { // if user has logged in
+    if (req.session && req.session.username) { // if user has logged in
         // send user data back
         res.sendFile(__dirname + "/views/index.html");
     }
@@ -36,7 +58,7 @@ app.get('/', bodyParser.json(), (req, res) => {
 
 app.get('/index.html', bodyParser.json(), (req, res) => {
 
-    if (req.user !== undefined && req.user !== null) { // if user has logged in
+    if (req.session && req.session.username) { // if user has logged in
         // send user data back
         res.sendFile(__dirname + "/views/index.html");
     }
@@ -74,18 +96,15 @@ app.post('/adduser', bodyParser.json(), (req, res) => {
     res.json({})
 })
 
-app.post('/login', bodyParser.json(), (req, res) => {
+app.post('/login', [limiter, bodyParser.json()], (req, res) => {
 
-    getUser(req.body.username).then(result => {
-
-        bcrypt.compare(req.body.password, result.password, function(err, result) {
-            if(result) {
-                // passwords match
-                res.json({authenticated: true});
-            } else {
-                // passwords don't match
-                res.json({authenticated: false});
+    getUser(req.body.username).then(user => {
+        bcrypt.compare(req.body.password, user.password, function(err, result) {
+            if (result) {
+                req.session.username = req.body.username;
             }
+
+            res.json(result);
         });
     })
 })
