@@ -5,9 +5,11 @@ const {MongoClient} = require('mongodb');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const rateLimit = require("express-rate-limit");
-const session = require('express-session')
+const session = require('express-session');
+const CryptoJS = require("crypto-js");
 
 const SALT_ROUNDS = 10;
+
 const limiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
     max: 20,                       // 20 attempts per day
@@ -74,9 +76,12 @@ app.get('/create.html', (req, res) => {
 app.get('/mydata', (req, res) => {
     if (req.session && req.session.username) {      // if user has logged in
         getUser(req.session.username).then(user => {   // they must have some data in the db
+
+            let bytes = CryptoJS.AES.decrypt(user.message, process.env.ENCRYPT_KEY);
+            let decryptedMsg = bytes.toString(CryptoJS.enc.Utf8);
             res.json({
                 username: user.username,
-                message: user.message
+                message: decryptedMsg
             })  // Note: DON'T SEND PASSWORD HASH
         })
     }
@@ -137,10 +142,12 @@ app.post('/adduser', bodyParser.json(), (req, res) => {
             bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
                 bcrypt.hash(req.body.password, salt, function(err, hash) {
 
+                    let encryptedMsg = CryptoJS.AES.encrypt(message, process.env.ENCRYPT_KEY).toString()
+
                     let newUser = {
                         username: username,
                         password: hash,
-                        message: message
+                        message: encryptedMsg
                     }
                     upsertUser(newUser).then(() => {
                         console.log(`Added ${newUser.username}`)
