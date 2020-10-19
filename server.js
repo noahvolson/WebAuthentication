@@ -111,7 +111,7 @@ app.post('/adduser', [limiter, bodyParser.json()], (req, res) => {
             res.json({error: "Invalid username."});
         }
         else if (password.length < 8) {
-            res.json({error: "Password must eight characters or longer."});
+            res.json({error: "Password must be 8 characters or longer."});
         }
         else if (password.length > 24) {
             res.json({error: "Password must be less than 24 characters."});
@@ -156,13 +156,18 @@ app.post('/adduser', [limiter, bodyParser.json()], (req, res) => {
 app.post('/login', [limiter, bodyParser.json()], (req, res) => {
 
     getUser(req.body.username).then(user => {
-        bcrypt.compare(req.body.password, user.password, function(err, result) {
-            if (result) {
-                req.session.username = req.body.username;
-            }
+        if (!user) {
+            res.json(false);
+        }
+        else {
+            bcrypt.compare(req.body.password, user.password, function(err, result) {
+                if (result) {
+                    req.session.username = req.body.username;
+                }
 
-            res.json(result);
-        });
+                res.json(result);
+            });
+        }
     })
 })
 

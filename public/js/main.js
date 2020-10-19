@@ -3,6 +3,6 @@ function main() {
         .then(response => response.json())
         .then(json => {
             document.getElementById("welcomeMsg").innerText = "Welcome " + json.username;
-            document.getElementById("yourSecretMsg").innerText = "Your secret message: " + json.message;
+            document.getElementById("yourSecretMsg").innerText = json.message;
         })
 }
