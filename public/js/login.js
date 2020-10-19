@@ -1,7 +1,7 @@
 function main() {
 
     if (sessionStorage.getItem("newlyCreated")) {
-        document.getElementById("newlyCreated").innerText = "Account created. Login here!"
+        document.getElementById("newlyCreated").innerText = "Account created. Login to continue!"
         sessionStorage.clear();
     }
 
@@ -31,5 +31,14 @@ function login() {
         .catch(() => window.alert("You have reached your daily attempt limit!\n\nPlease try again in 24 hours\n "))
         .then(authenticated => {
             console.log(authenticated);
+
+            if (!authenticated) {
+                error.innerText = "Incorrect username or password."
+            }
+            else {
+                window.location.href = "index.html";
+            }
+
+
         })
 }

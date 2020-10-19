@@ -1,8 +1,8 @@
 function main() {
-    document.getElementById("createBtn").onclick = createUser;
+    document.getElementById("createBtn").onclick = createClicked;
 }
 
-async function createUser() {
+async function createClicked() {
 
     let username = document.getElementById("usernameInput").value;
     let password = document.getElementById("passwordInput").value;
@@ -18,20 +18,6 @@ async function createUser() {
             sessionStorage.setItem("newlyCreated", "true")
         }
     })
-}
-
-function userExists(username) {
-
-    return fetch("/userexists", {
-        method:"POST",
-        body:JSON.stringify({ username: username }),
-        headers: { "Content-Type": "application/json"}
-    })
-        .then(response => response.json())
-        .catch(() => window.alert("You have reached your daily attempt limit!\n\nPlease try again in 24 hours\n "))
-        .then(json => {
-            return json
-        })
 }
 
 function addUser(user) {

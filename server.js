@@ -71,6 +71,22 @@ app.get('/create.html', (req, res) => {
     res.sendFile(__dirname + "/views/create.html")
 })
 
+app.get('/mydata', (req, res) => {
+    if (req.session && req.session.username) {      // if user has logged in
+        getUser(req.session.username).then(user => {   // they must have some data in the db
+            res.json({
+                username: user.username,
+                message: user.message
+            })  // Note: DON'T SEND PASSWORD HASH
+        })
+    }
+})
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.sendFile(__dirname + "/views/login.html")
+})
+
 app.post('/userexists', [limiter, bodyParser.json()], (req, res) => {
 
     getUser(req.body.username).then(result => {
