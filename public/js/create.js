@@ -27,6 +27,7 @@ function addUser(user) {
         headers: { "Content-Type": "application/json"}
     })
         .then(response => response.json())
+        .catch(() => window.alert("You have reached your daily attempt limit!\n\nPlease try again in 24 hours\n "))
         .then(json => {
             return json
         })

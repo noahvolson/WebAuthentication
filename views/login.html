@@ -4,29 +4,30 @@
     <meta charset="utf-8"/>
     <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxygen">
     <script src="js/login.js"></script>
 </head>
 
 <body onload="main()">
 
-<header>
-    <h1>Login</h1>
-</header>
-
 <main>
-    <h3 id="newlyCreated"></h3>
-    <div>
-        <label for="usernameInput">Username:</label>
-        <input type="text" id="usernameInput">
-
-        <label for="passwordInput">Password</label>
-        <input type="password" id="passwordInput">
-    </div>
-
-    <div>
-        <button id="loginBtn">Login</button>
-        <a href="/create.html"><button>Create an account</button></a>
+    <div id="paddedBox">
+        <h1>Login</h1>
+        <div>
+            <label for="usernameInput">Username:</label>
+            <input type="text" id="usernameInput">
+        </div>
+        <div class="downTwelvePx">
+            <label for="passwordInput">Password</label>
+            <input type="password" id="passwordInput">
+        </div>
         <label id="loginError" class="error"></label>
+
+        <div id="buttonBox">
+            <button id="loginBtn">Login</button>
+            <a href="/create.html"><button>Create an account</button></a>
+        </div>
+        <h3 id="newlyCreated"></h3>
     </div>
 </main>
 

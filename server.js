@@ -92,14 +92,7 @@ app.get('/logout', (req, res) => {
     res.sendFile(__dirname + "/views/login.html")
 })
 
-app.post('/userexists', [limiter, bodyParser.json()], (req, res) => {
-
-    getUser(req.body.username).then(result => {
-        res.json({userexists: Boolean(result)})
-    })
-})
-
-app.post('/adduser', bodyParser.json(), (req, res) => {
+app.post('/adduser', [limiter, bodyParser.json()], (req, res) => {
 
     let username = req.body.username;
     let password = req.body.password;

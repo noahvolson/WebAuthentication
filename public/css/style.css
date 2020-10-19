@@ -1,6 +1,11 @@
 body {
+    font-family: 'Oxygen', serif;
     background-color: #000000;
     color: white;
+}
+
+h2 {
+    font-size: 26px;
 }
 
 label {
@@ -12,3 +17,54 @@ label {
     color: red;
 }
 
+main {
+    text-align: center;
+    width: 325px;
+    height: 400px;
+    background-color: #212121;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+label {
+    text-align: left;
+}
+input {
+    width: 100%;
+}
+
+button {
+    background-color: #254AFB; /* Green */
+    border: none;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 2px;
+}
+
+button:hover {
+    background-color: #2041e0;
+}
+
+.downTwelvePx {
+    margin-top: 12px;
+}
+
+#paddedBox {
+    padding: 50px;
+}
+
+#buttonBox {
+    margin-top: 10px;
+}
+
+#loginError, #createError {
+    padding-top: 6px;
+    height: 16px;
+}
