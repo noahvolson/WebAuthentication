@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const rateLimit = require("express-rate-limit");
 const session = require('express-session');
 const CryptoJS = require("crypto-js");
+const helmet = require('helmet');
 
 const SALT_ROUNDS = 10;
 
@@ -28,6 +29,9 @@ app.use (function (req, res, next) {
     }
 });
 */
+
+// set a variety of security-increasing headers
+app.use(helmet({contentSecurityPolicy: false})) // disable contentSecurityPolicy because it breaks things
 
 // serve favicon
 app.use(favicon(__dirname + "/public/images/favicon.ico"));
