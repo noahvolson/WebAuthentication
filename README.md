@@ -1,6 +1,6 @@
 
 
-#**Webware Authentication Project**
+# Webware Authentication Project
 
 Noah Olson - noahvolson - nvolson
 
@@ -12,7 +12,7 @@ Repository: [https://github.com/noahvolson/WebAuthentication](https://github.com
 
 Project Goal: Build a secure login system with a hashed database of passwords and encrypted user data.
 
-###**Security Features**
+### Security Features
 
 **Encrypted requests:** When using regular HTTP requests, the contents of POST messages can be read during transit by packet sniffing programs such as Wireshark. To avoid this, I enforce the use of HTTPS with custom middleware (see credit). All HTTP requests are now immediately redirected to the HTTPS version of my website. 
 
@@ -32,17 +32,17 @@ Project Goal: Build a secure login system with a hashed database of passwords an
 
 **Environment variables:** My database password, session secret, and encryption key are all stored in environment variables instead of source code. This means that, even if my source code is leaked (it is available on glitch after all) user data will not be compromised.
 
-###**Visual Design**
+### **Visual Design**
 
 While the design challenges of this project were minimal, I put care into ensuring a clean aesthetic.
 
 I implemented a dark-theme for my login page. Such themes help to minimize eye strain and power draw. I adhered to materialize standards by ensuring that elements which should have a higher elevation are represented with lighter colors. One example of this is my buttons. On mouse over, their color becomes slightly darker to indicate that they are set into the page. 
 
-###**Challenges**
+### Challenges
 
 Initially, I thought that JWT (Json Web Token) based authentication would be the best option for maintaining login state across tabs. The more I read up on it, the more I learned that this solution would not be appropriate for my problem: JWTs are largely used to authenticate APIs, not for authenticating web pages. There are many reasons for this. Most notably, tokens cannot be revoked in the same way that sessions can. If a user is abusing the system, tokens will grant them access until they expire, regardless of any input from administrators. Additionally, JWTs take up a considerable amount of space when compared to their counterparts. It is clear that maintaining server sessions is the cleanest solution for web page authentication. 
 
-###**Credit**
+### Credit
 
 Code snippet by Glitch user khalby786 used to force HTTPS
 
